@@ -1,0 +1,207 @@
+{% extends 'base.html' %}
+
+{% block title %}Participate{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1>Participate</h1>
+    <p>Choose your participation type below:</p>
+
+    <!-- Toggle between Individual and Team participation -->
+    <div class="btn-group" role="group" aria-label="Participation Type">
+        <button type="button" class="btn btn-secondary" id="individualBtn">Individual</button>
+        <button type="button" class="btn btn-secondary" id="teamBtn">Team</button>
+    </div>
+
+    <!-- Individual Participation Form (Default) -->
+    <div id="individualForm" class="mt-4">
+        <h3>Individual Participation</h3>
+        <form id="individualFormElement">
+            <div class="mb-3">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" class="form-control" id="name" placeholder="Enter your name" required>
+            </div>
+            <div class="mb-3">
+                <label for="phone" class="form-label">Phone Number</label>
+                <input type="tel" class="form-control" id="phone" placeholder="Enter your phone number" pattern="[0-9]{10}" required>
+            </div>
+            <div class="mb-3">
+                <label for="sport" class="form-label">Select Sport</label>
+                <select class="form-select" id="sport" required>
+                    <option value="" disabled selected>Select a sport</option>
+                    <option value="kho-kho">Kho-Kho</option>
+                    <option value="badminton">Badminton</option>
+                    <option value="basketball">Basketball</option>
+                    <option value="tennis">Tennis</option>
+                    <option value="volleyball">Volleyball</option>
+                    <option value="football">Football</option>
+                    <option value="cricket">Cricket</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Book Slot</button>
+        </form>
+    </div>
+
+    <!-- Team Participation Form (Hidden by default) -->
+    <div id="teamForm" class="mt-4" style="display:none;">
+        <h3>Team Participation</h3>
+        <form id="teamFormElement">
+            <!-- Select Sport (Event) -->
+            <div class="mb-3">
+                <label for="teamSport" class="form-label">Select Sport</label>
+                <select class="form-select" id="teamSport" required>
+                    <option value="" disabled selected>Select a sport</option>
+                    <option value="kho-kho">Kho-Kho (11 players)</option>
+                    <option value="volleyball">Volleyball (6 players)</option>
+                    <option value="basketball">Basketball (6 players)</option>
+                    <option value="badminton">Badminton (2 players)</option>
+                    <option value="football">Football (11 players)</option>
+                </select>
+            </div>
+
+            <!-- Team Name -->
+            <div class="mb-3" id="teamNameDiv" style="display:none;">
+                <label for="teamName" class="form-label">Team Name</label>
+                <input type="text" class="form-control" id="teamName" placeholder="Enter team name" required>
+            </div>
+
+            <!-- Team Leader Name -->
+            <div class="mb-3" id="teamLeaderDiv" style="display:none;">
+                <label for="teamLeader" class="form-label">Couch Name</label>
+                <input type="text" class="form-control" id="teamLeader" placeholder="Enter team leader name" required>
+            </div>
+
+            <!-- Phone Number -->
+            <div class="mb-3" id="teamPhoneDiv" style="display:none;">
+                <label for="phone" class="form-label">Phone Number</label>
+                <input type="tel" class="form-control" id="teamPhone" placeholder="Enter team phone number" pattern="[0-9]{10}" required>
+            </div>
+
+            <!-- Team Members -->
+            <div id="teamMembersDiv" style="display:none;"></div> <!-- Dynamic player inputs -->
+
+            <!-- Team Location -->
+            <div class="mb-3" id="teamLocationDiv" style="display:none;">
+                <label for="teamLocation" class="form-label">Team Location</label>
+                <input type="text" class="form-control" id="teamLocation" placeholder="Enter team location" required>
+            </div>
+
+            <!-- Book Slot Button -->
+            <button type="submit" class="btn btn-primary" id="bookSlotBtn" style="display:none;">Book Slot</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Toggle between Individual and Team forms
+    const individualBtn = document.getElementById('individualBtn');
+    const teamBtn = document.getElementById('teamBtn');
+    const individualForm = document.getElementById('individualForm');
+    const teamForm = document.getElementById('teamForm');
+    const teamSportSelect = document.getElementById('teamSport');
+    const teamNameDiv = document.getElementById('teamNameDiv');
+    const teamLeaderDiv = document.getElementById('teamLeaderDiv');
+    const teamPhoneDiv = document.getElementById('teamPhoneDiv');
+    const teamMembersDiv = document.getElementById('teamMembersDiv');
+    const teamLocationDiv = document.getElementById('teamLocationDiv');
+    const bookSlotBtn = document.getElementById('bookSlotBtn');
+
+    // Show/hide individual and team forms
+    individualBtn.addEventListener('click', () => {
+        individualForm.style.display = 'block';
+        teamForm.style.display = 'none';
+        individualBtn.classList.add('btn-primary');
+        teamBtn.classList.remove('btn-primary');
+        individualBtn.classList.remove('btn-secondary');
+        teamBtn.classList.add('btn-secondary');
+    });
+
+    teamBtn.addEventListener('click', () => {
+        individualForm.style.display = 'none';
+        teamForm.style.display = 'block';
+        teamBtn.classList.add('btn-primary');
+        individualBtn.classList.remove('btn-primary');
+        teamBtn.classList.remove('btn-secondary');
+        individualBtn.classList.add('btn-secondary');
+        resetTeamForm();
+    });
+
+    // Handle sport selection for the team form
+    teamSportSelect.addEventListener('change', function () {
+        const sport = this.value;
+        let playerInputs = '';
+        let teamSize = 0;
+
+        // Reset dynamic fields
+        resetTeamForm();
+
+        if (sport === 'kho-kho' || sport === 'football') {
+            teamSize = 11;
+        } else if (sport === 'volleyball' || sport === 'basketball') {
+            teamSize = 6;
+        } else if (sport === 'badminton') {
+            teamSize = 2;
+        }
+
+        // Show dynamic inputs based on team size
+        if (teamSize > 0) {
+            teamNameDiv.style.display = 'block';
+            teamLeaderDiv.style.display = 'block';
+            teamPhoneDiv.style.display = 'block';
+            teamLocationDiv.style.display = 'block';
+            teamMembersDiv.style.display = 'block';
+            bookSlotBtn.style.display = 'block';
+
+            playerInputs = createTeamMemberInputs(teamSize);
+            teamMembersDiv.innerHTML = playerInputs;
+        }
+    });
+
+    // Create team member input fields based on team size
+    function createTeamMemberInputs(playerCount) {
+        let inputs = '';
+        for (let i = 1; i <= playerCount; i++) {
+            inputs += `
+                <div class="mb-3">
+                    <label for="player${i}" class="form-label">Player ${i}</label>
+                    <input type="text" class="form-control" id="player${i}" placeholder="Enter player ${i} name" required>
+                </div>
+            `;
+        }
+        return inputs;
+    }
+
+    // Reset team form when switching between sports
+    function resetTeamForm() {
+        teamNameDiv.style.display = 'none';
+        teamLeaderDiv.style.display = 'none';
+        teamPhoneDiv.style.display = 'none';
+        teamMembersDiv.style.display = 'none';
+        teamLocationDiv.style.display = 'none';
+        bookSlotBtn.style.display = 'none';
+    }
+
+    // Handle form submission for individual or team
+    function handleSubmitForm(event, formType) {
+        event.preventDefault();
+        alert(`${formType} Slot Booked Successfully!`);
+        event.target.reset();
+    }
+
+    // Individual form submission
+    document.getElementById('individualFormElement').addEventListener('submit', function (event) {
+        handleSubmitForm(event, 'Individual');
+    });
+
+    // Team form submission
+    document.getElementById('teamFormElement').addEventListener('submit', function (event) {
+        handleSubmitForm(event, 'Team');
+    });
+
+    // Initialize with individual form active
+    individualBtn.classList.add('btn-primary');
+    individualForm.style.display = 'block';
+    teamForm.style.display = 'none';
+</script>
+
+{% endblock %}

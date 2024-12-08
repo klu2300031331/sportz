@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block title %}Create New Event{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <!-- Page Header -->
+    <header class="text-center mb-4">
+        <h1 class="display-4" style="color: violet;">Create a New Event</h1>
+        <h2 class="text-primary" style="color: #007bff;">Fill in the event details</h2>
+    </header>
+
+    <!-- Display success or error messages -->
+    {% if messages %}
+        <div class="alert alert-success" style="padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+            {% for message in messages %}
+                <p style="margin: 0;">{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Event Creation Form -->
+    <form method="post" style="background: #f8f9fa; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+        {% csrf_token %}
+        <!-- Event Title and Date -->
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="form-group d-flex justify-content-between align-items-center" style="gap: 10px;">
+                    <label for="id_title" style="font-weight: bold; flex-basis: 30%;">Event Title</label>
+                    <div style="flex-basis: 70%;">{{ form.title }}</div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="form-group d-flex justify-content-between align-items-center" style="gap: 10px;">
+                    <label for="id_date" style="font-weight: bold; flex-basis: 30%;">Event Date</label>
+                    <div style="flex-basis: 70%;">{{ form.date }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Location and Venue -->
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="form-group d-flex justify-content-between align-items-center" style="gap: 10px;">
+                    <label for="id_location" style="font-weight: bold; flex-basis: 30%;">Location</label>
+                    <div style="flex-basis: 70%;">{{ form.location }}</div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="form-group d-flex justify-content-between align-items-center" style="gap: 10px;">
+                    <label for="id_venue" style="font-weight: bold; flex-basis: 30%;">Venue</label>
+                    <div style="flex-basis: 70%;">{{ form.venue }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Available Seats and Description -->
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="form-group d-flex justify-content-between align-items-center" style="gap: 10px;">
+                    <label for="id_available_seats" style="font-weight: bold; flex-basis: 30%;">Available Seats</label>
+                    <div style="flex-basis: 70%;">{{ form.available_seats }}</div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="form-group d-flex justify-content-between align-items-center" style="gap: 10px;">
+                    <label for="id_description" style="font-weight: bold; flex-basis: 30%;">Description</label>
+                    <div style="flex-basis: 70%;">{{ form.description }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary" style="background-color: #007bff; border: none; padding: 10px 20px; border-radius: 4px; font-size: 16px; cursor: pointer;">Create Event</button>
+        </div>
+    </form>
+
+    <!-- Back to Event List -->
+    <div class="text-center mt-3">
+        <a href="{% url 'events' %}" class="btn btn-secondary" style="background-color: #6c757d; border: none; padding: 10px 20px; border-radius: 4px; font-size: 16px; text-decoration: none; color: white;">Back to Event List</a>
+    </div>
+</div>
+
+<!-- Dark Mode Styles -->
+<style>
+    body.dark-mode header h1 {
+        color: violet; /* Title color in dark mode */
+    }
+    body.dark-mode .text-primary {
+        color: #bb86fc; /* Adjusted primary color for dark mode */
+    }
+    body.dark-mode form {
+        background: #121212; /* Dark background for forms */
+        color: #ffffff; /* Ensure text is readable */
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+    }
+</style>
+{% endblock %}

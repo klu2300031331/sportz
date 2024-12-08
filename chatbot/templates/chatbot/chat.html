@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div id="chat-box" style="width: 400px; margin: 0 auto; padding: 20px; background-color: #f4f4f9; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+    <div id="chat-messages" style="height: 300px; overflow-y: scroll; margin-bottom: 15px; padding-right: 10px; border-bottom: 1px solid #ddd;">
+        <!-- Displaying previous chat -->
+        <p><b>You:</b> <span class="user-message" style="color: #333; background-color: #e1f5fe; padding: 5px 10px; border-radius: 5px; display: inline-block; margin-bottom: 5px;">{{ user_input }}</span></p>
+        <p><b>Bot:</b> <span class="bot-message" style="color: #333; background-color: #fff9c4; padding: 5px 10px; border-radius: 5px; display: inline-block; margin-bottom: 5px;">{{ bot_response }}</span></p>
+    </div>
+    <form method="POST" style="display: flex; gap: 10px; justify-content: space-between;">
+        {% csrf_token %}
+        <input type="text" name="user_input" placeholder="Type your message" required style="width: 80%; padding: 10px; font-size: 16px; border-radius: 5px; border: 1px solid #ccc;">
+        <button type="submit" style="width: 15%; padding: 10px; background-color: #3b82f6; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px;">Enter</button>
+    </form>
+    <div id="footer" style="margin-top: 15px; text-align: center; font-size: 14px; color: #777;">
+        <p>&copy; 2024 Sports Management Chatbot</p>
+    </div>
+</div>
+
+<script>
+    // Optional: For smooth scrolling to the bottom of the chat box after each message
+    document.getElementById('chat-messages').scrollTop = document.getElementById('chat-messages').scrollHeight;
+</script>
+{% endblock %}

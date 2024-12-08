@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>{% block title %}Home{% endblock %}</title>
+    <link rel="icon" href="{% static 'images/logo.jpg' %}" type="image/png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- FontAwesome -->
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+
+    <style>
+        .navbar {
+            background-color: white;
+            z-index: 10;
+            font-size: 1.2rem;
+        }
+        .navbar .nav-link {
+            font-size: 1.2rem;
+            color: black;
+        }
+        .navbar-brand, .navbar-text {
+            color: violet !important;
+        }
+        body.light-mode {
+            background-color: white;
+            color: black;
+            padding-top: 56px;
+        }
+        body.dark-mode {
+            background-color: #333;
+            color: white;
+            padding-top: 56px;
+        }
+        body.dark-mode .navbar {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        /* All navbar links are white in dark mode */
+        body.dark-mode .navbar-nav .nav-link {
+            color: white;
+        }
+
+        /* Hover and active states turn violet */
+        body.dark-mode .navbar-nav .nav-link:hover,
+        body.dark-mode .navbar-nav .nav-link.active {
+            color: violet;
+        }
+
+        body.dark-mode .card {
+            background-color: #444;
+            border: 1px solid #555;
+        }
+        body.dark-mode .card-title {
+            color: violet;
+        }
+        body.dark-mode .card-text {
+            color: #ddd;
+        }
+
+        /* Footer Styles */
+        footer {
+            background-color: #f8f9fa;
+            padding: 40px 0;
+            text-align: center;
+            color: #555; /* Light mode text color */
+        }
+        footer.dark-mode {
+            background-color: #222; /* Dark mode footer background */
+            color: #ddd; /* Dark mode text color */
+        }
+        footer .social-icons i {
+            font-size: 2rem;
+            margin: 0 15px;
+            color: #555;
+        }
+        footer .social-icons i:hover {
+            color: violet;
+        }
+        footer.dark-mode .social-icons i {
+            color: #ddd; /* Dark mode icon color */
+        }
+        footer .footer-links a {
+            color: #555;
+            margin: 0 10px;
+            text-decoration: none;
+        }
+        footer .footer-links a:hover {
+            color: violet;
+            text-decoration: underline;
+        }
+        footer.dark-mode .footer-links a {
+            color: #ddd; /* Dark mode footer link color */
+        }
+        footer .copyright {
+            margin-top: 20px;
+            color: #777;
+        }
+        footer.dark-mode .copyright {
+            color: #ccc; /* Dark mode copyright color */
+        }
+
+        /* Decreased favicon size */
+        footer .favicon {
+            height: 60px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body class="light-mode">
+    <!-- Navbar Section -->
+    <nav class="navbar navbar-expand-lg bg-body-tertiary fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Sportz</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
+                    </li>
+                    <!-- Dropdown for Events -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="eventsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Events
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="eventsDropdown">
+                            <li><a class="dropdown-item" href="{% url 'events' %}">Details</a></li>
+                            <li><a class="dropdown-item" href="{% url 'payment' %}">Payment</a></li>
+                            <li><a class="dropdown-item" href="{% url 'participate' %}">Participate</a></li>
+                            {% if user.is_staff %}
+                                <li><a class="dropdown-item" href="{% url 'create_event' %}">Create Event</a></li>
+                            {% endif %}
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'live_scores' %}">Live Scores</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{% url 'player_statistics' %}">Statistics</a>
+                    </li>
+                    <!-- Added Contact Us Link in Navbar -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'contact_us' %}">Contact Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'chatbot_view' %}">
+                            <img src="{% static 'images/chatbot-icon.png' %}" alt="Chatbot" style="width: 30px; height: 30px;">Chatbot</a>
+                    </li>
+                </ul>
+                <div class="d-flex">
+                    <div class="me-3">
+                        <select class="form-select" aria-label="Select mode" id="modeSelector">
+                            <option selected>Select mode</option>
+                            <option value="light">Light</option>
+                            <option value="dark">Dark</option>
+                        </select>
+                    </div>
+
+                    {% if user.is_authenticated %}
+                        <span class="navbar-text me-3" style="color: violet;">
+                            <a href="{% url 'user_details' %}" class="text-decoration-none" style="color: inherit;">Welcome, {{ user.username }}!</a>
+                        </span>
+                        <form method="post" action="{% url 'logout' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-danger">Logout</button>
+                        </form>
+                    {% else %}
+                        <a class="btn btn-outline-success me-2" href="{% url 'login' %}">Login</a>
+                        <a class="btn btn-outline-primary" href="{% url 'register' %}">Register</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    {% block body %}
+    {% endblock %}
+
+    <!-- Footer Section -->
+    <footer class="light-mode">
+        <div class="container">
+            <!-- Favicon and Social Links -->
+            <div class="row">
+                <div class="col-12">
+                    <img alt="Sportz logo" class="favicon" src="{% static 'images/logo.jpg' %}">
+                </div>
+                <div class="col-12 social-icons">
+                    <a href="#" class="text-decoration-none"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" class="text-decoration-none"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="text-decoration-none"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="text-decoration-none"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+
+            <!-- Footer Links -->
+            <div class="footer-links">
+                <a href="#">Sportz Home</a> |
+                <a href="{% url 'contact_us' %}">Contact Us</a> |
+                <a href="#">Terms of Service</a> |
+                <a href="#">Privacy Policy</a> |
+                <a href="#">Cookie Policy</a>
+            </div>
+
+            <!-- Copyright Section -->
+            <p class="copyright">
+                Copyright © 2024 Sportz Inc. All Rights Reserved.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Theme Toggle Script -->
+    <script>
+        // Check and set the theme on page load
+        window.onload = function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.body.classList.remove('light-mode', 'dark-mode');
+                document.body.classList.add(savedTheme);
+
+                // Apply dark mode to footer as well
+                const footer = document.querySelector('footer');
+                if (savedTheme === 'dark-mode') {
+                    footer.classList.add('dark-mode');
+                } else {
+                    footer.classList.remove('dark-mode');
+                }
+            }
+        };
+
+        const modeSelector = document.getElementById('modeSelector');
+
+        modeSelector.addEventListener('change', function() {
+            if (this.value === 'dark') {
+                document.body.classList.remove('light-mode');
+                document.body.classList.add('dark-mode');
+                localStorage.setItem('theme', 'dark-mode');
+
+                // Apply dark mode to footer
+                const footer = document.querySelector('footer');
+                footer.classList.add('dark-mode');
+            } else {
+                document.body.classList.remove('dark-mode');
+                document.body.classList.add('light-mode');
+                localStorage.setItem('theme', 'light-mode');
+
+                // Remove dark mode from footer
+                const footer = document.querySelector('footer');
+                footer.classList.remove('dark-mode');
+            }
+        });
+    </script>
+</body>
+</html>

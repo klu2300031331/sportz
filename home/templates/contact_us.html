@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Contact Us{% endblock %}
+
+{% block body %}
+  <div class="container py-5">
+    <div class="row d-flex align-items-center">
+      <!-- Contact Form Section (on the left for larger screens) -->
+      <div class="col-md-6">
+        <h1 class="text-3xl font-weight-bold mb-4">Drop us a line</h1>
+        <form method="POST" action="{% url 'contact_submit' %}"class="space-y-4">
+          {% csrf_token %}
+          <!-- Full Name Field -->
+          <div class="mb-3">
+            <label class="form-label" for="full-name">Full Name</label>
+            <input class="form-control" id="full-name" name="full-name" placeholder="What's your full name?" type="text" required />
+          </div>
+
+          <!-- Email Address Field -->
+          <div class="mb-3">
+            <label class="form-label" for="email">Email address</label>
+            <input class="form-control" id="email" name="email" placeholder="you@example.com" type="email" required />
+          </div>
+
+          <!-- Message Field -->
+          <div class="mb-3">
+            <label class="form-label" for="message">Message</label>
+            <textarea class="form-control" id="message" name="message" placeholder="Write your message for the team here" rows="4" required></textarea>
+          </div>
+
+          <!-- Submit Button -->
+          <div>
+            <button class="btn btn-primary w-100" type="submit">Submit</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Image Section (on the right for larger screens) -->
+      <div class="col-md-6 mb-4 mb-md-0">
+        <img alt="Exciting image representing sports management system with various sports equipment and activities" class="img-fluid p-4" src="https://static01.nyt.com/images/2019/12/19/multimedia/19SP-MOMENTS-INYT-RUGBY/merlin_163768305_14e60b2d-807d-4e4c-9dac-dd672c89c8f7-superJumbo.jpg" style="height: 100; width: 100;" />
+      </div>
+    </div>
+  </div>
+{% endblock %}

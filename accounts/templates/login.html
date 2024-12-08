@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4f4fc;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            height: 100vh;
+            display: flex;
+            align-items: center; /* Vertically center */
+            justify-content: center; /* Horizontally center */
+        }
+        .card {
+            border: none;
+            border-radius: 15px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+        }
+        .btn-violet {
+            background-color: #7a00cc;
+            color: #fff;
+            border: none;
+        }
+        .btn-violet:hover {
+            background-color: #6600b3;
+        }
+        h2 {
+            color: #7a00cc;
+        }
+        .form-control:focus {
+            border-color: #7a00cc;
+            box-shadow: 0 0 0 0.2rem rgba(122, 0, 204, 0.25);
+        }
+        .form-label {
+            color: #7a00cc;
+        }
+        a {
+            color: #7a00cc;
+            text-decoration: underline;
+        }
+        .container {
+            margin-top: 50px; /* Bring the form down a bit */
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
+            <div class="card p-4">
+                <h2 class="mb-4 text-center">Login</h2>
+                <form method="post">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="username" name="username" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-violet w-100 mt-3">Login</button>
+                </form>
+                <p class="mt-3 text-center">Don't have an account? <a href="{% url 'register' %}">Register here</a>.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

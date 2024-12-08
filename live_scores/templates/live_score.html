@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Live Scores{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="text-center text-3xl font-bold mb-6">Live Sports Scores</h1>
+
+    <!-- Event Selection Dropdown -->
+    <div class="mb-4">
+        <label for="event-select" class="form-label">Select an Event:</label>
+        <select id="event-select" class="form-control" onchange="fetchEventMatches()">
+            <option value="" disabled selected>Select an event</option>
+            <option value="football">Football</option>
+            <option value="badminton">Badminton</option>
+            <option value="volleyball">Volleyball</option>
+            <option value="kho-kho">Kho-Kho</option>
+            <option value="tennis">Tennis</option>
+            <option value="cricket">Cricket</option>
+        </select>
+    </div>
+
+    <!-- Matches Scores Section -->
+    <div id="matches-section" style="display:none;">
+        <h2 class="text-center mb-4" id="event-title"></h2>
+        <div id="matches-container" class="row"></div>
+    </div>
+</div>
+
+<script>
+    const allMatches = {
+        football: [
+            { match: "Team A vs Team B", score: "0 - 0" },
+            { match: "Team C vs Team D", score: "1 - 2" }
+        ],
+        badminton: [
+            { match: "Player 1 vs Player 2", score: "15 - 18" },
+            { match: "Player 3 vs Player 4", score: "21 - 20" }
+        ],
+        volleyball: [
+            { match: "Team X vs Team Y", score: "22 - 25" },
+            { match: "Team Z vs Team W", score: "23 - 21" }
+        ],
+        "kho-kho": [
+            { match: "Team Alpha vs Team Beta", score: "8 - 6" },
+            { match: "Team Gamma vs Team Delta", score: "9 - 10" }
+        ],
+        tennis: [
+            { match: "Player A vs Player B", score: "6 - 4" },
+            { match: "Player C vs Player D", score: "3 - 6" }
+        ],
+         cricket: [
+            { match: "Team X vs Team Y", score: "15 - 18" },
+            { match: "Team M vs Team N", score: "21 - 20" }
+        ]
+
+    };
+
+    function fetchEventMatches() {
+        const eventSelect = document.getElementById("event-select").value.toLowerCase();
+        const matchesSection = document.getElementById("matches-section");
+        const matchesContainer = document.getElementById("matches-container");
+        const eventTitle = document.getElementById("event-title");
+
+        matchesContainer.innerHTML = ""; // Clear previous matches
+
+        if (allMatches[eventSelect]) {
+            matchesSection.style.display = "block";
+            eventTitle.innerText = eventSelect.charAt(0).toUpperCase() + eventSelect.slice(1) + " Matches";
+
+            // Populate matches
+            allMatches[eventSelect].forEach((match, index) => {
+                matchesContainer.innerHTML += `
+                    <div class="col-md-4 mb-4">
+                        <div class="card">
+                            <div class="card-header bg-dark text-white">
+                                Match ${index + 1}
+                            </div>
+                            <div class="card-body">
+                                <p class="card-title">${match.match}</p>
+                                <h4 class="card-text">${match.score}</h4>
+                                <p class="text-muted">Live</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        } else {
+            matchesSection.style.display = "none"; // Hide section if no matches
+        }
+    }
+</script>
+{% endblock %}

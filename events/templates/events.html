@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}Upcoming Events{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <header class="text-center mb-4">
+        <h1 class="display-4">Sports Event Management</h1>
+        <h2 class="text-primary">Upcoming Events</h2>
+    </header>
+
+    <div class="row">
+        {% for event in events %}
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h3 class="card-title">{{ event.title }}</h3>
+                    <p class="card-text"><strong>Date:</strong> {{ event.date }}</p>
+                    <p class="card-text"><strong>Location:</strong> {{ event.location }}</p>
+                    <!-- Use event.id instead of event.slug for URL generation -->
+                    <a href="{% url 'event_detail' event.id %}" class="btn btn-primary">More Info</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <p>No upcoming events at the moment.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+    /* Custom styles */
+    .card {
+        transition: transform 0.2s;
+    }
+
+    .card:hover {
+        transform: scale(1.05);
+    }
+
+    header h1 {
+        color: violet;
+    }
+
+    .text-primary {
+        color: #007bff; /* Bootstrap primary color */
+    }
+
+    /* Ensure text is visible in dark mode */
+    body.dark-mode header h1 {
+        color: violet; /* Title color */
+    }
+    body.dark-mode .text-primary {
+        color: #bb86fc; /* Slightly lighter color for dark mode */
+    }
+</style>
+{% endblock %}

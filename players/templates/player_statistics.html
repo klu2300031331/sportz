@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Player Stats{% endblock %}
+
+{% block body %}
+<style>
+    /* Ensure the player stats container grows to fill the available space */
+    .player-stats-background {
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+        flex-grow: 1; /* Allow the content to take remaining space */
+        color: violet;
+        margin-top: 40px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px 0;
+        text-align: center;
+    }
+
+    .stats-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 30px;
+        margin-top: 20px;
+    }
+
+    .profile-container {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        width: 300px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .profile-container img {
+        border-radius: 50%;
+        border: 4px solid #4C90B0;
+        height: 200px;
+        width: 200px;
+        margin-bottom: 20px;
+    }
+
+    .profile-container h2 {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .stats-table-container {
+        display: flex; /* Arrange stats table next to the profile */
+        flex-direction: row;
+        gap: 30px;
+        justify-content: center;
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .stats-table {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        width: 600px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .stats-table h3 {
+        font-size: 1.8rem;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    .stats-table table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .stats-table th, .stats-table td {
+        padding: 12px;
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .stats-table th {
+        background-color: #4C90B0;
+        color: white;
+    }
+
+    .stats-table td {
+        font-size: 1.1rem;
+    }
+
+    /* Ensure the footer stays at the bottom */
+    body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+    .content-wrapper {
+        flex-grow: 1; /* Allow content to fill the available space */
+    }
+</style>
+
+<div class="content-wrapper">
+    <div class="player-stats-background">
+        <h1>Player Statistics</h1>
+
+        <div class="stats-container">
+            {% for player in players %}
+                <div class="stats-table-container">
+                    <!-- Player Profile Section -->
+                    <div class="profile-container">
+                        <img alt="{{ player.name }}'s profile" src="{{ player.profile_picture }}" />
+                        <h2>{{ player.name }}</h2>
+                        <p>Age: {{ player.age }}</p>
+                        <p>Team: {{ player.team }}</p>
+                        <p>Position: {{ player.position }}</p>
+                        <p>Sport: {{ player.sport.name }}</p>
+                    </div>
+
+                    <!-- Player Stats Section -->
+                    <div class="stats-table">
+                        <h3>Performance Stats</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Games Played</th>
+                                    <th>Goals</th>
+                                    <th>Assists</th>
+                                    <th>Points</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for stat in player.stats.all %}
+                                    <tr>
+                                        <td>{{ stat.games_played }}</td>
+                                        <td>{{ stat.goals }}</td>
+                                        <td>{{ stat.assists }}</td>
+                                        <td>{{ stat.points }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

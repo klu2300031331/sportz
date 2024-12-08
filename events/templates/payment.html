@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block title %}Participate{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1>Payment</h1>
+    <form id="participationForm" class="mt-4">
+        <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" class="form-control" id="name" placeholder="Enter your name" required>
+        </div>
+        <div class="mb-3">
+            <label for="phone" class="form-label">Phone Number</label>
+            <input type="tel" class="form-control" id="phone" placeholder="Enter your phone number" pattern="[0-9]{10}" required>
+        </div>
+        <div class="mb-3">
+            <label for="sport" class="form-label">Select Sport</label>
+            <select class="form-select" id="sport" required>
+                <option value="" disabled selected>Select a sport</option>
+                <option value="football">Football</option>
+                <option value="volleyball">Volleyball</option>
+                <option value="basketball">Basketball</option>
+                <option value="tennis">Tennis</option>
+                <option value="kho-kho">Kho-Kho</option>
+                <option value="badminton">Badminton</option>
+                <option value="cricket">Cricket</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="tickets" class="form-label">Number of Tickets</label>
+            <input type="number" class="form-control" id="tickets" placeholder="Enter number of tickets" min="1" required>
+        </div>
+        <div class="mb-3">
+            <label for="total" class="form-label">Total Amount</label>
+            <input type="text" class="form-control" id="total" readonly>
+        </div>
+        <button type="submit" class="btn btn-primary">Book Tickets</button>
+    </form>
+
+    <!-- QR Code section (hidden initially) -->
+    <div id="qrcodeSection" class="mt-4" style="display: none;">
+        <h3>Scan the QR Code to complete the payment</h3>
+        <canvas id="qrcode"></canvas> <!-- QR code will be displayed here -->
+    </div>
+</div>
+
+<!-- Include QRCode.js library -->
+<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+
+<script>
+    const ticketsInput = document.getElementById('tickets');
+    const totalInput = document.getElementById('total');
+    const ticketPrice = 200;
+
+    // Event listener to calculate total amount based on the number of tickets
+    ticketsInput.addEventListener('input', () => {
+        const numberOfTickets = parseInt(ticketsInput.value) || 0;
+        totalInput.value = `₹${numberOfTickets * ticketPrice}`;  // Correct string interpolation syntax
+    });
+
+    // Form submission handling
+    const form = document.getElementById('participationForm');
+    form.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        // Calculate total amount
+        const totalAmount = parseInt(ticketsInput.value) * ticketPrice;
+
+        // Generate UPI payment link dynamically based on the total amount
+        const upiPaymentLink = `upi://pay?pa=7981209406@ibl&pn=YourName&mc=0000&tid=1234567890&tr=123456&tn=Payment%20for%20tickets&am=${totalAmount}&cu=INR`;
+
+        // Use QRCode.js to generate the QR code for the UPI payment link
+        QRCode.toCanvas(document.getElementById('qrcode'), upiPaymentLink, function (error) {
+            if (error) {
+                console.error(error);
+            } else {
+                // Show the QR code section after successful generation
+                document.getElementById('qrcodeSection').style.display = 'block';
+                alert('Tickets booked successfully! Please scan the QR code to complete the payment.');
+            }
+        });
+    });
+</script>
+{% endblock %}
